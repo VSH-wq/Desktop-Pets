@@ -1,0 +1,45 @@
+{
+  "name": "Bunny",
+  "theme": "Spring",
+  "frames": 8,
+  "sizes": [
+    32,
+    64
+  ],
+  "fps": {
+    "idle": 8,
+    "jump": 12,
+    "sleep": 6,
+    "happy": 10
+  },
+  "animations": [
+    "idle",
+    "jump",
+    "sleep",
+    "happy"
+  ],
+  "frameSize": {
+    "32": {
+      "w": 32,
+      "h": 32
+    },
+    "64": {
+      "w": 64,
+      "h": 64
+    }
+  },
+  "files": {
+    "32": {
+      "idle": "bunny_idle_32.png",
+      "jump": "bunny_jump_32.png",
+      "sleep": "bunny_sleep_32.png",
+      "happy": "bunny_happy_32.png"
+    },
+    "64": {
+      "idle": "bunny_idle_64.png",
+      "jump": "bunny_jump_64.png",
+      "sleep": "bunny_sleep_64.png",
+      "happy": "bunny_happy_64.png"
+    }
+  }
+}
