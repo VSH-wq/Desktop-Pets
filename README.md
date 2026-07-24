@@ -11,6 +11,8 @@ desktop_pet/
 ├── main.py              # entry point
 ├── pet_app.py            # DesktopPet class: window, state machine, animation
 ├── sprite_loader.py       # slices spritesheets into frames per animation
+├── speech_bubble.py       # popup bubble window used for messages
+├── messages.py            # pools of message strings per event/mood
 ├── requirements.txt
 ├── README.md
 └── assets/
@@ -36,18 +38,30 @@ python main.py
 
 ## Controls
 
-- **Left-click**: pet plays its "happy" animation
-- **Left-click + drag**: move the pet around the screen
-- **Right-click**: context menu — switch pet (all 12), switch size (32/64px), or quit
+- **Left-click**: pet plays "happy" and says something, +15 happiness
+- **Double-click**: pet chases your cursor for ~5 seconds, then rests
+- **Left-click + drag**: move the pet around the screen; it comments when you let go
+- **Right-click**: context menu — switch pet (all 12), switch size
+  (32/64px), **Feed** (+30 happiness / +20 energy), **Show Stats**, or quit
 
 ## How it behaves
 
-- Starts **idle**. After a random 4–8 seconds it either **hops** (jump
-  animation, moves a random distance left/right, clamped to the screen
-  edges) or goes to **sleep**.
-- Stays asleep for a random 6–12 seconds, then wakes back to idle.
-- Clicking always interrupts the current state and plays **happy** for
-  ~2 seconds before returning to idle.
+- Starts **idle**, facing whichever way it last moved. After a random
+  4–8 seconds it either **hops** (jump animation, random distance
+  left/right, clamped to the screen edges, sprite mirrors to face the
+  direction it's moving) or goes to **sleep**.
+- Every hop/active second costs a little **energy**; sleeping restores
+  it. If energy drops to 20 or below the pet naps regardless of the
+  idle timer; it wakes once energy is back near full (or after its
+  timer runs out, whichever comes first).
+- **Happiness** slowly decays over time and rises from clicking or
+  feeding. It doesn't gate behavior directly, but it picks which pool
+  of idle chatter shows up (upbeat vs. neutral vs. "pet me?").
+- The pet occasionally says something unprompted while idle (every
+  ~15–30s) in a speech bubble above its head — the tone depends on its
+  current happiness.
+- Stats (happiness/energy) carry over when you switch pet or size —
+  they belong to "the pet", not to a specific sprite.
 
 ## How the transparency works
 

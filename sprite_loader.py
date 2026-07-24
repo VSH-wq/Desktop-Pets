@@ -13,7 +13,7 @@ Windows, making it disappear.
 
 import json
 from pathlib import Path
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps
 
 ASSETS_DIR = Path(__file__).parent / "assets" / "Tiny Pets"
 
@@ -47,7 +47,8 @@ class SpriteSet:
 
         self.fps = meta["fps"]
         self.frame_count = meta["frames"]
-        self.frames = {}  # animation name -> list[ImageTk.PhotoImage]
+        self.frames = {}          # animation name -> list[ImageTk.PhotoImage] (facing right)
+        self.frames_flipped = {}  # animation name -> list[ImageTk.PhotoImage] (facing left)
 
         bg_rgb = _hex_to_rgb(bg_color) + (255,)
         size_key = str(size)
@@ -59,6 +60,7 @@ class SpriteSet:
             frame_h = sheet.height
 
             frames = []
+            frames_flipped = []
             for i in range(self.frame_count):
                 box = (i * frame_w, 0, (i + 1) * frame_w, frame_h)
                 frame = sheet.crop(box)
@@ -66,8 +68,13 @@ class SpriteSet:
                 bg = Image.new("RGBA", frame.size, bg_rgb)
                 composed = Image.alpha_composite(bg, frame).convert("RGB")
                 frames.append(ImageTk.PhotoImage(composed))
+                frames_flipped.append(ImageTk.PhotoImage(ImageOps.mirror(composed)))
 
             self.frames[anim_name] = frames
+            self.frames_flipped[anim_name] = frames_flipped
+
+    def frames_for(self, anim_name: str, facing_right: bool = True):
+        return self.frames[anim_name] if facing_right else self.frames_flipped[anim_name]
 
     def animation_names(self):
         return list(self.frames.keys())
